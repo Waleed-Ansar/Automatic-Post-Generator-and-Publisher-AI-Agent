@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+    *{box-sizing:border-box} 
+    body{margin:0;background:#fff;font-family:Inter,Segoe UI,Arial,sans-serif}
+
+    /* Dynamic height adjustment */
+    .post{
+        width:1080px;
+        min-height:1080px;
+        height:auto;
+        position:relative;
+        background:#ffffff;
+        color:#101828;
+        display:flex;
+        padding:70px;
+    }
+
+    .diag{position:absolute;inset:0;background:linear-gradient(122deg,#121826 0 48%,#ff4d6d 48% 100%)}
+
+    .card{
+        position:relative;
+        flex-grow:1;
+        background:#fff;
+        border-radius:46px;
+        overflow:hidden;
+        box-shadow:0 40px 90px rgba(0,0,0,.28);
+        display:flex;
+    }
+
+    .left{
+        width:47%;
+        background:#101828;
+        color:#fff;
+        padding:54px 44px;
+        display:flex;
+        flex-direction:column;
+    }
+
+    .right{
+        width:53%;
+        padding:54px 48px;
+        display:flex;
+        flex-direction:column;
+    }
+
+    .kicker{font-size:25px;line-height:1.1;color:#ffb3c1;font-weight:950;text-transform:uppercase;letter-spacing:.1em}
+    .header{font-size:62px;line-height:.92;font-weight:1000;letter-spacing:-.05em;margin:40px 0 28px}
+    .sub{font-size:29px;line-height:1.15;color:#e5e7eb;font-weight:650;flex-grow:1}
+
+    /* Brand moved to bottom left where the circle was */
+    .brand{
+        color:#ff4d6d;
+        font-size:24px;
+        font-weight:900;
+        margin-top:auto;
+    }
+
+    .list-title{font-size:24px;font-weight:1000;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6d;margin-bottom:28px}
+    .item{display:grid;grid-template-columns:28px 1fr;gap:16px;margin:0 0 22px;align-items:start;font-size:27px;line-height:1.12;font-weight:750}
+    
+    .tick{width:28px;height:28px;border-radius:50%;background:#ff4d6d;margin-top:2px;position:relative}
+    .tick:after{content:"";position:absolute;left:8px;top:6px;width:10px;height:6px;border-left:4px solid #fff;border-bottom:4px solid #fff;transform:rotate(-45deg)}
+
+    .cta{
+        margin-top:auto;
+        background:#101828;
+        color:#fff;
+        border-radius:20px;
+        padding:22px 26px;
+        font-size:29px;
+        line-height:1.05;
+        font-weight:1000;
+        text-align:center;
+    }
+    .link{font-size:17px;color:#667085;margin-top:12px;font-weight:800;display:block}
+</style>
+</head>
+<body>
+    <main id="post" class="post">
+        <div class="diag"></div>
+        <section class="card">
+            <div class="left">
+                <div class="kicker">{{ sub_header }}</div>
+                <h1 class="header">{{ header }}</h1>
+                <p class="sub">{{ content_items[0] if content_items else content }}</p>
+                <div class="brand">{{ brand }}</div>
+            </div>
+
+            <div class="right">
+                <div style="height:20px"></div>
+                <div class="list-title">Follow these steps</div>
+                
+                <div class="items">
+                    {% for item in content_items[1:8] %}
+                    <div class="item">
+                        <span class="tick"></span>
+                        <span>{{ item }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="cta">
+                    {{ cta }}
+                    {% if link_label %}<span class="link">{{ link_label }}</span>{% endif %}
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
