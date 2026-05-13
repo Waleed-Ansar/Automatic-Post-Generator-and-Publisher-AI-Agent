@@ -1,0 +1,10 @@
+jinja2
+playwright
+langchain
+langchain_classic
+langchain_core
+langchain_community
+langsmith
+langgraph
+google-search-results
+langchain_openai
