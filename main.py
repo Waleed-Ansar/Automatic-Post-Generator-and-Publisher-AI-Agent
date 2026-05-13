@@ -1,13 +1,11 @@
 from langchain.agents import create_agent
 import langchain
-from langsmith import Client
 from langgraph.checkpoint.memory import InMemorySaver
 
 from llm import get_llm
 from agents import Agents
 from prompts import COORDINATOR_AGENT_PROMPT
 
-client = Client()
 
 checkpointer = InMemorySaver()
 
