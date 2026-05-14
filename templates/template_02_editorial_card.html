@@ -1,8 +1,304 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<style>
-*{box-sizing:border-box} body{margin:0;background:#ede9df;font-family:Georgia,'Times New Roman',serif;color:#111}.post{width:1080px;height:1080px;background:#f7f2e8;padding:66px 72px;position:relative;overflow:hidden}.topline{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #111;padding-bottom:18px;font:800 22px/1.1 Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em}.seal{border:3px solid #111;border-radius:999px;padding:12px 18px}.layout{display:grid;grid-template-columns:1fr 330px;gap:48px;margin-top:52px}.header{font-size:74px;line-height:.92;margin:0 0 26px;font-weight:900;letter-spacing:-.045em}.sub{font:800 28px/1.15 Arial,sans-serif;text-transform:uppercase;color:#c34b25;margin-bottom:42px}.content{border-top:2px solid #111}.item{display:grid;grid-template-columns:38px 1fr;border-bottom:2px solid #111;padding:23px 0;gap:16px;font:600 27px/1.22 Arial,sans-serif}.num{font-weight:950;color:#c34b25}.aside{background:#111;color:#f8f2e7;border-radius:4px;padding:32px 26px;min-height:560px;position:relative}.aside:before{content:"";position:absolute;inset:18px;border:1px solid rgba(255,255,255,.35)}.aside-title{font:900 23px/1.1 Arial,sans-serif;text-transform:uppercase;letter-spacing:.12em;color:#f2c84b;margin-bottom:26px}.quote{font-size:42px;line-height:1.02;font-weight:900}.cta{position:absolute;left:72px;right:72px;bottom:70px;background:#c34b25;color:#fff;font:950 34px/1.05 Arial,sans-serif;padding:24px 32px;display:flex;justify-content:space-between;gap:28px;align-items:center}.link{font-size:18px;line-height:1.15;font-weight:800;max-width:300px;opacity:.85}.brand{position:absolute;bottom:26px;left:72px;font:800 20px Arial,sans-serif;color:#5b554d}</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Card | Heritage Canvas</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #ede9df;
+            font-family: Georgia, 'Times New Roman', serif;
+            color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        /* 
+           DYNAMIC HEIGHT CARD 
+           - Removed fixed height and overflow:hidden
+           - Height is driven by content (list items, quote, CTA)
+           - All original design preserved
+        */
+        .post {
+            width: 1080px;
+            max-width: 100%;
+            background: #f7f2e8;
+            padding: 66px 72px 100px 72px;   /* increased bottom padding to accommodate absolute brand */
+            position: relative;
+            transition: all 0.2s ease;
+            /* No fixed height — fully dynamic */
+        }
+
+        /* Top bar — unchanged */
+        .topline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #111;
+            padding-bottom: 18px;
+            font: 800 22px/1.1 Arial, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .seal {
+            border: 3px solid #111;
+            border-radius: 999px;
+            padding: 12px 18px;
+        }
+
+        /* Main two‑column layout */
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 330px;
+            gap: 48px;
+            margin-top: 52px;
+        }
+
+        /* Headline area */
+        .header {
+            font-size: 74px;
+            line-height: .92;
+            margin: 0 0 26px;
+            font-weight: 900;
+            letter-spacing: -.045em;
+        }
+
+        .sub {
+            font: 800 28px/1.15 Arial, sans-serif;
+            text-transform: uppercase;
+            color: #c34b25;
+            margin-bottom: 42px;
+        }
+
+        /* Dynamic list — each item adds to height automatically */
+        .content {
+            border-top: 2px solid #111;
+        }
+
+        .item {
+            display: grid;
+            grid-template-columns: 38px 1fr;
+            border-bottom: 2px solid #111;
+            padding: 23px 0;
+            gap: 16px;
+            font: 600 27px/1.22 Arial, sans-serif;
+        }
+
+        .num {
+            font-weight: 950;
+            color: #c34b25;
+        }
+
+        /* Right panel (aside) — unchanged */
+        .aside {
+            background: #111;
+            color: #f8f2e7;
+            border-radius: 4px;
+            padding: 32px 26px;
+            min-height: 560px;    /* keeps original proportion, but does not force outer height */
+            position: relative;
+        }
+
+        .aside:before {
+            content: "";
+            position: absolute;
+            inset: 18px;
+            border: 1px solid rgba(255, 255, 255, .35);
+            pointer-events: none;
+        }
+
+        .aside-title {
+            font: 900 23px/1.1 Arial, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: #f2c84b;
+            margin-bottom: 26px;
+        }
+
+        .quote {
+            font-size: 42px;
+            line-height: 1.02;
+            font-weight: 900;
+        }
+
+        /* 
+           CTA – converted to normal flow (no absolute positioning)
+           - Moves naturally below .layout, eliminates empty bottom area
+           - Retains exact visual style (background, flex, typography)
+           - Adds spacing above and below for harmonious layout
+        */
+        .cta {
+            margin-top: 56px;
+            background: #c34b25;
+            color: #fff;
+            font: 950 34px/1.05 Arial, sans-serif;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            gap: 28px;
+            align-items: center;
+            border-radius: 0;   /* matches original sharp style */
+            width: 100%;
+        }
+
+        .link {
+            font-size: 18px;
+            line-height: 1.15;
+            font-weight: 800;
+            max-width: 300px;
+            opacity: .85;
+            text-align: right;
+        }
+
+        /* 
+           Brand – stays absolutely positioned at bottom of .post
+           To prevent content from hiding behind it, we added bottom padding to .post (100px)
+           Now brand sits elegantly below all flow content.
+        */
+        .brand {
+            position: absolute;
+            bottom: 26px;
+            left: 72px;
+            font: 800 20px Arial, sans-serif;
+            color: #5b554d;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        /* Responsive refinements – keep readability on narrower screens */
+        @media (max-width: 1100px) {
+            .post {
+                padding: 48px 40px 90px 40px;
+            }
+            .layout {
+                gap: 32px;
+            }
+            .header {
+                font-size: 58px;
+            }
+            .item {
+                font-size: 23px;
+                grid-template-columns: 34px 1fr;
+            }
+            .quote {
+                font-size: 34px;
+            }
+            .cta {
+                font-size: 28px;
+                padding: 20px 26px;
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+                gap: 16px;
+            }
+            .link {
+                font-size: 16px;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 780px) {
+            .post {
+                padding: 32px 24px 80px 24px;
+            }
+            .layout {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                margin-top: 36px;
+            }
+            .header {
+                font-size: 44px;
+            }
+            .sub {
+                font-size: 22px;
+                margin-bottom: 28px;
+            }
+            .item {
+                font-size: 20px;
+                padding: 18px 0;
+                gap: 12px;
+            }
+            .aside {
+                min-height: auto;
+            }
+            .quote {
+                font-size: 28px;
+            }
+            .cta {
+                font-size: 22px;
+                padding: 18px 20px;
+                flex-direction: column;
+            }
+            .brand {
+                left: 32px;
+                bottom: 18px;
+                font-size: 16px;
+            }
+        }
+
+        /* preserve seal circle minimal style */
+        .seal:empty::before {
+            content: "⚡";
+            font-size: 24px;
+            letter-spacing: 0;
+        }
+    </style>
 </head>
-<body><main id="post" class="post"><div class="topline"><span>{{ sub_header }}</span><span class="seal"></span></div><section class="layout"><div><h1 class="header">{{ header }}</h1><div class="sub">Action checklist</div><div class="content">{% for item in content_items[:5] %}<div class="item"><span class="num">{{ '%02d' % loop.index }}</span><span>{{ item }}</span></div>{% endfor %}</div></div><aside class="aside"><div class="aside-title">Public Safety Note</div><div class="quote">Clean with care. Act before dust moves.</div></aside></section><div class="cta"><span>{{ cta }}</span>{% if link_label %}<span class="link">{{ link_label }}</span>{% endif %}</div><div class="brand">{{ brand }}</div></main></body></html>
+<body>
+    <main id="post" class="post">
+        <!-- top bar with dynamic kicker and seal -->
+        <div class="topline">
+            <span>{{ sub_header }}</span>
+            <span class="seal"></span>
+        </div>
+
+        <!-- main content: two columns (left: dynamic list, right: aside) -->
+        <section class="layout">
+            <!-- left column -->
+            <div>
+                <h1 class="header">{{ header }}</h1>
+                <div class="sub">Action checklist</div>
+                <div class="content">
+                    <!-- dynamic list items – the more items, the taller the card grows automatically -->
+                    {% for item in content_items[:5] %}
+                    <div class="item">
+                        <span class="num">{{ '%02d' % loop.index }}</span>
+                        <span>{{ item }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- right panel (branded note) -->
+            <aside class="aside">
+                <div class="aside-title">Public Safety Note</div>
+                <div class="quote">Clean with care. Act before dust moves.</div>
+            </aside>
+        </section>
+
+        <!-- 
+            CTA is now in document flow (not absolute) → it naturally sits below the content
+            Removed left/right/bottom absolute properties, but keeps all original styling.
+            This eliminates any empty bottom area and makes the card fully content-driven.
+        -->
+        <div class="cta">
+            <span>{{ cta }}</span>
+            {% if link_label %}
+            <span class="link">{{ link_label }}</span>
+            {% endif %}
+        </div>
+
+        <!-- absolute brand mark – stays pinned to bottom of .post, extra bottom padding on .post prevents overlap -->
+        <div class="brand">{{ brand }}</div>
+    </main>
+</body>
+</html>

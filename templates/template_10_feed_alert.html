@@ -1,8 +1,373 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-*{box-sizing:border-box} body{margin:0;background:#e9eef5;font-family:Inter,Segoe UI,Arial,sans-serif}.post{width:1080px;height:1080px;background:linear-gradient(180deg,#eef4fb,#d9e3f0);position:relative;overflow:hidden;padding:70px;color:#172033}.phone{width:720px;height:940px;margin:0 auto;background:#fff;border-radius:58px;box-shadow:0 40px 85px rgba(31,45,61,.25);padding:30px;position:relative;border:10px solid #172033}.top{height:56px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #e5e7eb;padding-bottom:20px}.avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#10b981,#38bdf8)}.brand{font-size:22px;font-weight:1000}.menu{font-size:30px;font-weight:1000;color:#94a3b8}.alert{margin-top:34px;background:#fff7ed;border:3px solid #fb923c;border-radius:30px;padding:26px}.kicker{display:inline-block;background:#fb923c;color:#111827;border-radius:999px;padding:10px 17px;font-size:18px;font-weight:1000;text-transform:uppercase;letter-spacing:.08em}.header{font-size:56px;line-height:.94;font-weight:1000;letter-spacing:-.045em;margin:30px 0 18px;color:#111827}.sub{font-size:27px;line-height:0.7;font-weight:720;color:#334155}.items{margin-top:26px;display:grid;gap:14px}.item{background:#fff;border:2px solid #fed7aa;border-radius:20px;padding:15px 17px 15px 54px;position:relative;font-size:23px;line-height:1.14;font-weight:760}.item:before{content:"";position:absolute;left:18px;top:18px;width:20px;height:20px;border-radius:6px;background:#10b981}.cta{margin-top:26px;background:#172033;color:#fff;border-radius:22px;padding:21px 24px;font-size:28px;line-height:1.05;font-weight:1000;text-align:center}.actions{display:flex;gap:18px;margin-top:24px;color:#64748b;font-size:23px;font-weight:900}.link{position:absolute;left:20px;bottom:-66px;border-radius:18px;padding:15px 18px;font-size:20px;font-weight:800;color:#475569;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}.bubble{position:absolute;border-radius:50%;background:#38bdf8;opacity:.24}.b1{width:210px;height:210px;left:-68px;top:118px}.b2{width:270px;height:270px;right:-110px;bottom:150px;background:#fb923c}.b3{width:145px;height:145px;right:110px;top:30px;background:#10b981}</style>
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background: #e9eef5;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 24px;
+}
+
+/* 
+    POST CONTAINER – dynamic height
+    Removed fixed height and overflow:hidden.
+    Keeps gradient background and bubbles.
+*/
+.post {
+    width: 1080px;
+    max-width: 100%;
+    background: linear-gradient(180deg, #eef4fb, #d9e3f0);
+    position: relative;
+    padding: 70px;
+    color: #172033;
+    /* no fixed height, no overflow hidden – dynamic */
+}
+
+/* floating bubbles – absolute, stay relative to .post */
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: #38bdf8;
+    opacity: .24;
+    pointer-events: none;
+}
+.b1 {
+    width: 210px;
+    height: 210px;
+    left: -68px;
+    top: 118px;
+}
+.b2 {
+    width: 270px;
+    height: 270px;
+    right: -110px;
+    bottom: 150px;
+    background: #fb923c;
+}
+.b3 {
+    width: 145px;
+    height: 145px;
+    right: 110px;
+    top: 30px;
+    background: #10b981;
+}
+
+/* 
+    PHONE CARD – dynamic height
+    Removed fixed height, width stays 720px.
+    Added bottom padding to accommodate absolute link.
+    Shadow and border preserved.
+*/
+.phone {
+    width: 720px;
+    max-width: 100%;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 58px;
+    box-shadow: 0 40px 85px rgba(31, 45, 61, .25);
+    padding: 30px 30px 90px 30px;   /* increased bottom padding for absolute link */
+    position: relative;
+    border: 10px solid #172033;
+    display: flex;
+    flex-direction: column;
+}
+
+/* top bar (avatar + brand + menu) – unchanged */
+.top {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+}
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #38bdf8);
+}
+.brand {
+    font-size: 22px;
+    font-weight: 1000;
+}
+.menu {
+    font-size: 30px;
+    font-weight: 1000;
+    color: #94a3b8;
+}
+
+/* alert card – main content area, expands naturally */
+.alert {
+    margin-top: 34px;
+    background: #fff7ed;
+    border: 3px solid #fb923c;
+    border-radius: 30px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+}
+
+.kicker {
+    display: inline-block;
+    background: #fb923c;
+    color: #111827;
+    border-radius: 999px;
+    padding: 10px 17px;
+    font-size: 18px;
+    font-weight: 1000;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    width: fit-content;
+}
+.header {
+    font-size: 56px;
+    line-height: .94;
+    font-weight: 1000;
+    letter-spacing: -.045em;
+    margin: 30px 0 18px;
+    color: #111827;
+}
+.sub {
+    font-size: 27px;
+    line-height: 1.2;        /* improved from 0.7 (which caused overlap) */
+    font-weight: 720;
+    color: #334155;
+    margin-bottom: 10px;
+}
+
+/* checklist items – dynamic */
+.items {
+    margin-top: 26px;
+    display: grid;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+.item {
+    background: #fff;
+    border: 2px solid #fed7aa;
+    border-radius: 20px;
+    padding: 15px 17px 15px 54px;
+    position: relative;
+    font-size: 23px;
+    line-height: 1.14;
+    font-weight: 760;
+}
+.item:before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 18px;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: #10b981;
+}
+
+/* CTA – natural flow, no absolute positioning */
+.cta {
+    margin-top: 26px;
+    background: #172033;
+    color: #fff;
+    border-radius: 22px;
+    padding: 21px 24px;
+    font-size: 28px;
+    line-height: 1.05;
+    font-weight: 1000;
+    text-align: center;
+    transition: transform 0.1s ease;
+}
+.cta:hover {
+    transform: scale(1.01);
+    cursor: pointer;
+}
+
+/* actions row – preserved */
+.actions {
+    display: flex;
+    gap: 18px;
+    margin-top: 24px;
+    color: #64748b;
+    font-size: 23px;
+    font-weight: 900;
+}
+
+/* 
+    Link – absolute within .phone
+    Since .phone has padding-bottom: 90px, the link sits comfortably
+    without overlapping content.
+*/
+.link {
+    position: absolute;
+    left: 30px;             /* aligned with phone padding */
+    bottom: 28px;
+    border-radius: 18px;
+    padding: 8px 15px;
+    font-size: 18px;
+    font-weight: 800;
+    color: #475569;
+    text-decoration: none;
+    background: rgba(255,255,255,0.8);
+    white-space: nowrap;
+    pointer-events: auto;
+}
+
+/* responsive adjustments */
+@media (max-width: 800px) {
+    .post {
+        padding: 40px 20px;
+    }
+    .phone {
+        width: 100%;
+        padding: 24px 24px 80px 24px;
+    }
+    .header {
+        font-size: 42px;
+        margin: 20px 0 14px;
+    }
+    .sub {
+        font-size: 22px;
+        line-height: 1.2;
+    }
+    .item {
+        font-size: 19px;
+        padding: 12px 14px 12px 48px;
+    }
+    .item:before {
+        left: 14px;
+        top: 14px;
+        width: 18px;
+        height: 18px;
+    }
+    .cta {
+        font-size: 22px;
+        padding: 16px 20px;
+        margin-top: 20px;
+    }
+    .kicker {
+        font-size: 15px;
+        padding: 8px 14px;
+    }
+    .brand {
+        font-size: 18px;
+    }
+    .top {
+        height: auto;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding-bottom: 14px;
+    }
+    .avatar {
+        width: 40px;
+        height: 40px;
+    }
+    .link {
+        left: 24px;
+        bottom: 22px;
+        font-size: 14px;
+        white-space: normal;
+        text-align: center;
+        background: rgba(255,255,255,0.9);
+    }
+}
+
+@media (max-width: 540px) {
+    .post {
+        padding: 24px 16px;
+    }
+    .phone {
+        padding: 18px 18px 70px 18px;
+        border-width: 6px;
+    }
+    .alert {
+        padding: 18px;
+        margin-top: 24px;
+    }
+    .header {
+        font-size: 34px;
+    }
+    .sub {
+        font-size: 18px;
+    }
+    .item {
+        font-size: 16px;
+        padding: 10px 12px 10px 42px;
+    }
+    .item:before {
+        left: 12px;
+        top: 12px;
+        width: 16px;
+        height: 16px;
+    }
+    .cta {
+        font-size: 18px;
+        padding: 14px 16px;
+    }
+    .brand {
+        font-size: 16px;
+    }
+    .link {
+        left: 18px;
+        bottom: 18px;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    .b1, .b2, .b3 {
+        transform: scale(0.7);
+    }
+}
+</style>
 </head>
-<body><main id="post" class="post"><div class="bubble b1"></div><div class="bubble b2"></div><div class="bubble b3"></div><section class="phone"><div class="top"><div style="display:flex;align-items:center;gap:14px"><div class="avatar"></div><div class="brand">{{ brand }}</div></div><div class="menu">•••</div></div><article class="alert"><div class="kicker">{{ sub_header }}</div><h1 class="header">{{ header }}</h1><p class="sub">{{ content_items[0] if content_items else content }}</p><div class="items">{% for item in content_items[1:5] %}<div class="item">{{ item }}</div>{% endfor %}</div><div class="cta">{{ cta }}</div><div class="actions"></div></article>{% if link_label %}<div class="link">{{ link_label }}</div>{% endif %}</section></main></body></html>
+<body>
+    <main id="post" class="post">
+        <!-- floating bubbles -->
+        <div class="bubble b1"></div>
+        <div class="bubble b2"></div>
+        <div class="bubble b3"></div>
+
+        <!-- phone card – height adjusts to content -->
+        <section class="phone">
+            <div class="top">
+                <div style="display:flex; align-items:center; gap:14px">
+                    <div class="avatar"></div>
+                    <div class="brand">{{ brand }}</div>
+                </div>
+                <div class="menu">•••</div>
+            </div>
+
+            <article class="alert">
+                <div class="kicker">{{ sub_header }}</div>
+                <h1 class="header">{{ header }}</h1>
+                <p class="sub">{{ content_items[0] if content_items else content }}</p>
+
+                <!-- dynamic checklist items -->
+                <div class="items">
+                    {% for item in content_items[1:5] %}
+                    <div class="item">{{ item }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- CTA in normal flow – no absolute, no empty space -->
+                <div class="cta">{{ cta }}</div>
+                <div class="actions"></div>
+            </article>
+
+            <!-- absolute link label (optional) -->
+            {% if link_label %}
+            <div class="link">{{ link_label }}</div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

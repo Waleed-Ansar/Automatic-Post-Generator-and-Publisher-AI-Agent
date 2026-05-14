@@ -1,8 +1,303 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<style>
-*{box-sizing:border-box} body{margin:0;background:#050816;font-family:Inter,Segoe UI,Arial,sans-serif}.post{width:1080px;height:1080px;position:relative;overflow:hidden;background:radial-gradient(circle at 22% 20%,#7c3aed 0 16%,transparent 37%),radial-gradient(circle at 83% 15%,#06b6d4 0 15%,transparent 34%),radial-gradient(circle at 68% 84%,#f43f5e 0 18%,transparent 38%),#050816;padding:70px}.blob{position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(28px);opacity:.42}.panel{height:940px;position:relative;z-index:2;background:linear-gradient(135deg,rgba(255,255,255,.21),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.35);border-radius:64px;box-shadow:0 30px 90px rgba(0,0,0,.42);padding:56px;color:white}.kicker{font-size:23px;letter-spacing:.18em;text-transform:uppercase;color:#c8f7ff;font-weight:900}.header{font-size:76px;line-height:.93;margin:38px 0 24px;letter-spacing:-.05em;font-weight:1000;max-width:830px}.sub{font-size:32px;line-height:1.15;color:#e7ecff;font-weight:650;max-width:760px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:46px}.cell{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);border-radius:26px;padding:20px 22px;min-height:114px}.cell .icon{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#67e8f9,#a78bfa);margin-bottom:12px}.cell p{margin:0;font-size:24px;line-height:1.17;font-weight:760}.cta{position:absolute;left:56px;right:56px;bottom:72px;display:flex;align-items:center;justify-content:space-between;gap:24px;background:white;color:#080d1d;border-radius:999px;padding:22px 30px 22px 34px;font-size:29px;font-weight:1000}.link{font-size:17px;color:#4b5563;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.brand{position:absolute;left:60px;bottom:30px;color:rgba(255,255,255,.62);font-size:20px;font-weight:900}</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Canvas | Glassmorphic Core</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050816;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        /* 
+            POST CONTAINER – dynamic height
+            Removed fixed height and overflow:hidden -> content drives size.
+            Keeps all radial gradient layers and backgrounds.
+        */
+        .post {
+            width: 1080px;
+            max-width: 100%;
+            position: relative;
+            background: radial-gradient(circle at 22% 20%, #7c3aed 0 16%, transparent 37%),
+                        radial-gradient(circle at 83% 15%, #06b6d4 0 15%, transparent 34%),
+                        radial-gradient(circle at 68% 84%, #f43f5e 0 18%, transparent 38%),
+                        #050816;
+            padding: 70px;
+            /* no height, no overflow hidden – dynamic */
+        }
+
+        /* decorative blobs – preserved exactly */
+        .blob {
+            position: absolute;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            filter: blur(28px);
+            opacity: .42;
+            pointer-events: none;
+        }
+
+        /* 
+            PANEL CARD – dynamic height
+            - removed fixed height
+            - added bottom padding for brand/link clearance
+            - uses flex column to naturally stack content
+        */
+        .panel {
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(135deg, rgba(255,255,255,.21), rgba(255,255,255,.08));
+            border: 1px solid rgba(255,255,255,.35);
+            border-radius: 64px;
+            box-shadow: 0 30px 90px rgba(0,0,0,.42);
+            padding: 56px 56px 100px 56px;   /* increased bottom padding for brand/link */
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* kicker – unchanged */
+        .kicker {
+            font-size: 23px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: #c8f7ff;
+            font-weight: 900;
+        }
+
+        /* main headline */
+        .header {
+            font-size: 76px;
+            line-height: .93;
+            margin: 38px 0 24px;
+            letter-spacing: -.05em;
+            font-weight: 1000;
+            max-width: 830px;
+        }
+
+        .sub {
+            font-size: 32px;
+            line-height: 1.15;
+            color: #e7ecff;
+            font-weight: 650;
+            max-width: 760px;
+            margin-bottom: 20px;
+        }
+
+        /* 2‑column feature grid – grows with content */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 46px;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            background: rgba(255,255,255,.13);
+            border: 1px solid rgba(255,255,255,.28);
+            border-radius: 26px;
+            padding: 20px 22px;
+            min-height: 114px;
+        }
+
+        .cell .icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #67e8f9, #a78bfa);
+            margin-bottom: 12px;
+        }
+
+        .cell p {
+            margin: 0;
+            font-size: 24px;
+            line-height: 1.17;
+            font-weight: 760;
+        }
+
+        /* 
+            CTA – converted from absolute to normal flow
+            - sits after .grid, uses margin-top for spacing
+            - retains pill shape, white background, flex layout
+            - no longer overlaps content or creates empty space
+        */
+        .cta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            background: white;
+            color: #080d1d;
+            border-radius: 999px;
+            padding: 22px 30px 22px 34px;
+            font-size: 29px;
+            font-weight: 1000;
+            margin-top: 48px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            width: 100%;
+        }
+
+        .cta:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .link {
+            font-size: 17px;
+            color: #4b5563;
+            max-width: 280px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        /* 
+            Brand – absolute within .panel, positioned at bottom left
+            Since .panel has padding-bottom: 100px, brand sits in that reserved space
+        */
+        .brand {
+            position: absolute;
+            left: 56px;
+            bottom: 32px;
+            color: rgba(255,255,255,.62);
+            font-size: 20px;
+            font-weight: 900;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        /* optional: if you want to add a link label, it would also be absolute, but we keep the same pattern */
+        /* note: original template had no separate .link element aside from inside CTA, but we support both */
+
+        /* responsive adjustments – keep design integrity */
+        @media (max-width: 1100px) {
+            .post {
+                padding: 48px 32px;
+            }
+            .panel {
+                padding: 44px 44px 90px 44px;
+            }
+            .header {
+                font-size: 62px;
+            }
+            .sub {
+                font-size: 28px;
+            }
+            .cell p {
+                font-size: 21px;
+            }
+            .cta {
+                font-size: 24px;
+                padding: 18px 26px;
+                margin-top: 40px;
+            }
+        }
+
+        @media (max-width: 780px) {
+            body {
+                padding: 24px 16px;
+            }
+            .post {
+                padding: 32px 20px;
+            }
+            .panel {
+                padding: 32px 28px 80px 28px;
+            }
+            .header {
+                font-size: 44px;
+                margin: 28px 0 18px;
+            }
+            .sub {
+                font-size: 22px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-top: 32px;
+            }
+            .cell {
+                min-height: auto;
+                padding: 18px 20px;
+            }
+            .cell p {
+                font-size: 20px;
+            }
+            .cta {
+                font-size: 20px;
+                padding: 16px 22px;
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+                gap: 12px;
+                border-radius: 60px;
+                margin-top: 32px;
+            }
+            .link {
+                font-size: 14px;
+                white-space: normal;
+                max-width: 100%;
+            }
+            .brand {
+                left: 32px;
+                bottom: 24px;
+                font-size: 16px;
+            }
+            .kicker {
+                font-size: 18px;
+            }
+        }
+    </style>
 </head>
-<body><main id="post" class="post"><section class="panel"><div class="kicker">{{ sub_header }}</div><h1 class="header">{{ header }}</h1><p class="sub">{{ content_items[0] if content_items else content }}</p><div class="grid">{% for item in content_items[1:5] %}<div class="cell"><div class="icon"></div><p>{{ item }}</p></div>{% endfor %}</div><div class="cta"><span>{{ cta }}</span>{% if link_label %}<span class="link">{{ link_label }}</span>{% endif %}</div><div class="brand">{{ brand }}</div></section></main></body></html>
+<body>
+    <main id="post" class="post">
+        <!-- decorative blobs (optional, kept for atmosphere) -->
+        <div class="blob" style="top: 10%; left: -15%; background: #7c3aed;"></div>
+        <div class="blob" style="bottom: 5%; right: -10%; background: #f43f5e;"></div>
+        <div class="blob" style="top: 60%; left: 60%; background: #06b6d4;"></div>
+
+        <section class="panel">
+            <div class="kicker">{{ sub_header }}</div>
+            <h1 class="header">{{ header }}</h1>
+            <p class="sub">{{ content_items[0] if content_items else content }}</p>
+
+            <!-- feature grid – dynamic (up to 4 items from content_items[1:5]) -->
+            <div class="grid">
+                {% for item in content_items[1:5] %}
+                <div class="cell">
+                    <div class="icon"></div>
+                    <p>{{ item }}</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 
+                CTA now in normal document flow – automatically positions after grid.
+                All original styling preserved (pill shape, white bg, bold text).
+            -->
+            <div class="cta">
+                <span>{{ cta }}</span>
+                {% if link_label %}
+                <span class="link">{{ link_label }}</span>
+                {% endif %}
+            </div>
+
+            <!-- absolute brand mark (bottom left of panel) -->
+            <div class="brand">{{ brand }}</div>
+        </section>
+    </main>
+</body>
+</html>

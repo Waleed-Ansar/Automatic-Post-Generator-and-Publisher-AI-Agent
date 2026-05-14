@@ -1,16 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     *{box-sizing:border-box} 
-    body{margin:0;background:#fff;font-family:Inter,Segoe UI,Arial,sans-serif}
+    body{
+        margin:0;
+        background:#fff;
+        font-family:Inter, Segoe UI, Arial, sans-serif;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        min-height:100vh;
+        padding:40px 24px;
+    }
 
-    /* Dynamic height adjustment */
+    /* DYNAMIC HEIGHT: no fixed min-height, height auto, content drives size */
     .post{
         width:1080px;
-        min-height:1080px;
-        height:auto;
+        max-width:100%;
+        height:auto;           /* content‑driven height */
         position:relative;
         background:#ffffff;
         color:#101828;
@@ -18,18 +28,27 @@
         padding:70px;
     }
 
-    .diag{position:absolute;inset:0;background:linear-gradient(122deg,#121826 0 48%,#ff4d6d 48% 100%)}
+    /* diagonal background – covers full dynamic height because parent height is auto */
+    .diag{
+        position:absolute;
+        inset:0;
+        background:linear-gradient(122deg, #121826 0 48%, #ff4d6d 48% 100%);
+        pointer-events:none;
+    }
 
+    /* card – no flex-grow, width 100%, height auto */
     .card{
         position:relative;
-        flex-grow:1;
+        width:100%;
         background:#fff;
         border-radius:46px;
         overflow:hidden;
         box-shadow:0 40px 90px rgba(0,0,0,.28);
         display:flex;
+        flex-wrap:wrap;        /* allow wrap on narrow screens, but preserve desktop look */
     }
 
+    /* left column – width fixed, no height restrictions */
     .left{
         width:47%;
         background:#101828;
@@ -39,6 +58,7 @@
         flex-direction:column;
     }
 
+    /* right column – no forced height */
     .right{
         width:53%;
         padding:54px 48px;
@@ -46,11 +66,33 @@
         flex-direction:column;
     }
 
-    .kicker{font-size:25px;line-height:1.1;color:#ffb3c1;font-weight:950;text-transform:uppercase;letter-spacing:.1em}
-    .header{font-size:62px;line-height:.92;font-weight:1000;letter-spacing:-.05em;margin:40px 0 28px}
-    .sub{font-size:29px;line-height:1.15;color:#e5e7eb;font-weight:650;flex-grow:1}
+    .kicker{
+        font-size:25px;
+        line-height:1.1;
+        color:#ffb3c1;
+        font-weight:950;
+        text-transform:uppercase;
+        letter-spacing:.1em
+    }
 
-    /* Brand moved to bottom left where the circle was */
+    .header{
+        font-size:62px;
+        line-height:.92;
+        font-weight:1000;
+        letter-spacing:-.05em;
+        margin:40px 0 28px
+    }
+
+    /* removed flex-grow:1 – no extra empty space */
+    .sub{
+        font-size:29px;
+        line-height:1.15;
+        color:#e5e7eb;
+        font-weight:650;
+        margin-bottom:32px;
+    }
+
+    /* brand sits at bottom of left column – uses margin-top auto but only pushes itself */
     .brand{
         color:#ff4d6d;
         font-size:24px;
@@ -58,14 +100,54 @@
         margin-top:auto;
     }
 
-    .list-title{font-size:24px;font-weight:1000;letter-spacing:.1em;text-transform:uppercase;color:#ff4d6d;margin-bottom:28px}
-    .item{display:grid;grid-template-columns:28px 1fr;gap:16px;margin:0 0 22px;align-items:start;font-size:27px;line-height:1.12;font-weight:750}
-    
-    .tick{width:28px;height:28px;border-radius:50%;background:#ff4d6d;margin-top:2px;position:relative}
-    .tick:after{content:"";position:absolute;left:8px;top:6px;width:10px;height:6px;border-left:4px solid #fff;border-bottom:4px solid #fff;transform:rotate(-45deg)}
+    .list-title{
+        font-size:24px;
+        font-weight:1000;
+        letter-spacing:.1em;
+        text-transform:uppercase;
+        color:#ff4d6d;
+        margin-bottom:28px
+    }
 
+    /* checklist items – dynamic rows */
+    .items{
+        margin-bottom:32px;
+    }
+
+    .item{
+        display:grid;
+        grid-template-columns:28px 1fr;
+        gap:16px;
+        margin:0 0 22px;
+        align-items:start;
+        font-size:27px;
+        line-height:1.12;
+        font-weight:750
+    }
+    
+    .tick{
+        width:28px;
+        height:28px;
+        border-radius:50%;
+        background:#ff4d6d;
+        margin-top:2px;
+        position:relative;
+        flex-shrink:0;
+    }
+    .tick:after{
+        content:"";
+        position:absolute;
+        left:8px;
+        top:6px;
+        width:10px;
+        height:6px;
+        border-left:4px solid #fff;
+        border-bottom:4px solid #fff;
+        transform:rotate(-45deg);
+    }
+
+    /* CTA – natural flow, no margin-top:auto to avoid empty space */
     .cta{
-        margin-top:auto;
         background:#101828;
         color:#fff;
         border-radius:20px;
@@ -74,8 +156,48 @@
         line-height:1.05;
         font-weight:1000;
         text-align:center;
+        transition:transform 0.1s ease;
     }
-    .link{font-size:17px;color:#667085;margin-top:12px;font-weight:800;display:block}
+
+    .cta:hover{
+        transform:scale(1.01);
+        cursor:pointer;
+    }
+
+    .link{
+        font-size:17px;
+        color:#667085;
+        margin-top:12px;
+        font-weight:800;
+        display:block;
+    }
+
+    /* responsive: maintain layout on smaller screens */
+    @media (max-width: 1000px){
+        .post{padding:48px 32px;}
+        .left, .right{width:100%;}
+        .card{flex-direction:column;}
+        .left{padding:40px 36px;}
+        .right{padding:40px 36px;}
+        .header{font-size:48px;margin:28px 0 20px;}
+        .sub{font-size:24px;}
+        .item{font-size:22px;gap:12px;}
+        .cta{font-size:24px;padding:18px 22px;}
+        .brand{font-size:20px;margin-top:20px;}
+    }
+
+    @media (max-width: 780px){
+        .post{padding:32px 20px;}
+        .left, .right{padding:28px 24px;}
+        .header{font-size:38px;}
+        .sub{font-size:20px;}
+        .kicker{font-size:20px;}
+        .item{font-size:18px;margin-bottom:16px;}
+        .list-title{font-size:20px;}
+        .cta{font-size:20px;padding:14px 18px;}
+        .brand{font-size:16px;}
+        .link{font-size:14px;}
+    }
 </style>
 </head>
 <body>

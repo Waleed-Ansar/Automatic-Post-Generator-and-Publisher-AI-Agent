@@ -1,8 +1,319 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<style>
-*{box-sizing:border-box} body{margin:0;background:#252116;font-family:'Arial Black',Impact,Arial,sans-serif}.post{width:1080px;height:1080px;background:#efe0b9;position:relative;overflow:hidden;padding:58px}.post:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.035) 0 2px,transparent 2px 7px)}.poster{position:relative;height:964px;border:8px solid #261d15;padding:42px;background:#f4e6c5;box-shadow:18px 18px 0 #261d15}.ribbon{background:#d94b2b;color:#fff;font-size:30px;text-transform:uppercase;letter-spacing:.08em;padding:16px 20px;display:inline-block;transform:rotate(-2deg);box-shadow:7px 7px 0 #261d15}.header{font-size:72px;line-height:.86;color:#261d15;margin:48px 0 22px;text-transform:uppercase;letter-spacing:-.03em;text-shadow:4px 4px 0 #e6b84a}.sub{font-family:Arial,sans-serif;font-weight:900;font-size:31px;line-height:1.15;color:#3a3025;margin-bottom:34px;max-width:850px}.rule{height:8px;background:repeating-linear-gradient(90deg,#261d15 0 34px,#e6b84a 34px 68px);margin-bottom:30px}.items{display:grid;gap:14px}.item{font-family:Arial,sans-serif;font-size:27px;line-height:1.1;font-weight:900;color:#261d15;background:#fff8dd;border:4px solid #261d15;padding:16px 18px 16px 68px;position:relative}.item:before{content:"!";position:absolute;left:18px;top:12px;width:34px;height:34px;border-radius:50%;background:#261d15;color:#f4e6c5;text-align:center;line-height:34px;font-family:Arial Black}.cta{position:absolute;left:42px;right:42px;bottom:54px;background:#261d15;color:#f6df9f;text-align:center;font-size:34px;line-height:1;padding:24px 28px;text-transform:uppercase;border:4px solid #d94b2b}.link{position:absolute;right:48px;bottom:20px;font-family:Arial,sans-serif;font-size:18px;font-weight:900;color:#584634}.brand{position:absolute;left:48px;bottom:20px;font-family:Arial,sans-serif;font-size:20px;font-weight:900;color:#584634}</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Canvas | Vintage Poster</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #252116;
+            font-family: 'Arial Black', Impact, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        /* 
+            POST CONTAINER – dynamic height
+            Removed fixed height and overflow:hidden -> expands with content.
+            Keeps the repeating linear gradient overlay.
+        */
+        .post {
+            width: 1080px;
+            max-width: 100%;
+            background: #efe0b9;
+            position: relative;
+            padding: 58px;
+            /* no height, no overflow hidden */
+        }
+
+        .post:before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,.035) 0 2px, transparent 2px 7px);
+            pointer-events: none;
+        }
+
+        /* 
+            POSTER CARD – dynamic height
+            - removed fixed height, border+shadow preserved
+            - added bottom padding to create space for absolute brand/link
+            - uses flex column for natural stacking
+        */
+        .poster {
+            position: relative;
+            border: 8px solid #261d15;
+            padding: 42px 42px 100px 42px;   /* increased bottom padding for brand/link */
+            background: #f4e6c5;
+            box-shadow: 18px 18px 0 #261d15;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ribbon – unchanged */
+        .ribbon {
+            background: #d94b2b;
+            color: #fff;
+            font-size: 30px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            padding: 16px 20px;
+            display: inline-block;
+            transform: rotate(-2deg);
+            box-shadow: 7px 7px 0 #261d15;
+            width: fit-content;
+        }
+
+        /* main headline – untouched */
+        .header {
+            font-size: 72px;
+            line-height: .86;
+            color: #261d15;
+            margin: 48px 0 22px;
+            text-transform: uppercase;
+            letter-spacing: -.03em;
+            text-shadow: 4px 4px 0 #e6b84a;
+        }
+
+        /* subtext */
+        .sub {
+            font-family: Arial, sans-serif;
+            font-weight: 900;
+            font-size: 31px;
+            line-height: 1.15;
+            color: #3a3025;
+            margin-bottom: 34px;
+            max-width: 850px;
+        }
+
+        /* decorative rule – unchanged */
+        .rule {
+            height: 8px;
+            background: repeating-linear-gradient(90deg, #261d15 0 34px, #e6b84a 34px 68px);
+            margin-bottom: 30px;
+        }
+
+        /* checklist grid – dynamic, grows with items */
+        .items {
+            display: grid;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .item {
+            font-family: Arial, sans-serif;
+            font-size: 27px;
+            line-height: 1.1;
+            font-weight: 900;
+            color: #261d15;
+            background: #fff8dd;
+            border: 4px solid #261d15;
+            padding: 16px 18px 16px 68px;
+            position: relative;
+        }
+
+        .item:before {
+            content: "!";
+            position: absolute;
+            left: 18px;
+            top: 12px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #261d15;
+            color: #f4e6c5;
+            text-align: center;
+            line-height: 34px;
+            font-family: 'Arial Black', Impact, Arial, sans-serif;
+        }
+
+        /* 
+            CTA – converted from absolute to normal flow
+            - sits after .items, uses margin-top for spacing
+            - retains all original colors, borders, typography
+            - no longer causes empty bottom area
+        */
+        .cta {
+            background: #261d15;
+            color: #f6df9f;
+            text-align: center;
+            font-size: 34px;
+            line-height: 1;
+            padding: 24px 28px;
+            text-transform: uppercase;
+            border: 4px solid #d94b2b;
+            margin-top: 48px;
+            transition: transform 0.1s ease;
+            width: 100%;
+        }
+
+        /* hover effect (no design change, just polish) */
+        .cta:hover {
+            background: #3a2e24;
+            cursor: pointer;
+        }
+
+        /* 
+            Brand & Link – absolute within .poster
+            Since .poster has padding-bottom: 100px, these sit comfortably 
+            at the bottom without overlapping any content.
+        */
+        .brand {
+            position: absolute;
+            left: 42px;
+            bottom: 32px;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            color: #584634;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .link {
+            position: absolute;
+            right: 42px;
+            bottom: 32px;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            font-weight: 900;
+            color: #584634;
+            text-decoration: none;
+            pointer-events: auto;
+        }
+
+        /* responsive adjustments – keep readability and structure */
+        @media (max-width: 1100px) {
+            .post {
+                padding: 40px 32px;
+            }
+            .poster {
+                padding: 36px 36px 90px 36px;
+            }
+            .header {
+                font-size: 58px;
+            }
+            .sub {
+                font-size: 26px;
+            }
+            .item {
+                font-size: 23px;
+                padding: 14px 18px 14px 62px;
+            }
+            .item:before {
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
+                top: 10px;
+                left: 16px;
+            }
+            .cta {
+                font-size: 28px;
+                padding: 20px 24px;
+                margin-top: 40px;
+            }
+        }
+
+        @media (max-width: 780px) {
+            body {
+                padding: 24px 16px;
+            }
+            .post {
+                padding: 28px 20px;
+            }
+            .poster {
+                padding: 28px 24px 80px 24px;
+            }
+            .header {
+                font-size: 42px;
+                margin: 32px 0 18px;
+            }
+            .sub {
+                font-size: 22px;
+                margin-bottom: 24px;
+            }
+            .ribbon {
+                font-size: 22px;
+                padding: 12px 18px;
+            }
+            .item {
+                font-size: 18px;
+                padding: 12px 16px 12px 52px;
+            }
+            .item:before {
+                width: 26px;
+                height: 26px;
+                line-height: 26px;
+                font-size: 16px;
+                top: 10px;
+                left: 12px;
+            }
+            .cta {
+                font-size: 22px;
+                padding: 16px 20px;
+                margin-top: 32px;
+            }
+            .brand {
+                left: 28px;
+                bottom: 24px;
+                font-size: 16px;
+            }
+            .link {
+                right: 28px;
+                bottom: 24px;
+                font-size: 14px;
+            }
+            .rule {
+                margin-bottom: 24px;
+            }
+        }
+    </style>
 </head>
-<body><main id="post" class="post"><section class="poster"><div class="ribbon">{{ sub_header }}</div><h1 class="header">{{ header }}</h1><p class="sub">{{ content_items[0] if content_items else content }}</p><div class="rule"></div><div class="items">{% for item in content_items[1:6] %}<div class="item">{{ item }}</div>{% endfor %}</div><div class="cta">{{ cta }}</div><div class="brand">{{ brand }}</div>{% if link_label %}<div class="link">{{ link_label }}</div>{% endif %}</section></main></body></html>
+<body>
+    <main id="post" class="post">
+        <section class="poster">
+            <!-- ribbon / kicker -->
+            <div class="ribbon">{{ sub_header }}</div>
+
+            <!-- main headline -->
+            <h1 class="header">{{ header }}</h1>
+
+            <!-- sub description -->
+            <p class="sub">{{ content_items[0] if content_items else content }}</p>
+
+            <!-- decorative rule -->
+            <div class="rule"></div>
+
+            <!-- dynamic checklist items (up to 5 from content_items[1:6]) -->
+            <div class="items">
+                {% for item in content_items[1:6] %}
+                <div class="item">{{ item }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- 
+                CTA is now in natural document flow – no absolute positioning.
+                It automatically sits below the checklist, and the card height 
+                expands accordingly. All visual styles are preserved.
+            -->
+            <div class="cta">{{ cta }}</div>
+
+            <!-- absolute brand mark (bottom left) -->
+            <div class="brand">{{ brand }}</div>
+
+            <!-- optional link label (bottom right) -->
+            {% if link_label %}
+            <div class="link">{{ link_label }}</div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

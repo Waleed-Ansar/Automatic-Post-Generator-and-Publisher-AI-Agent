@@ -1,4 +1,8 @@
+dotenv
+fastapi
+uvicorn
 jinja2
+customtkinter
 playwright
 langchain
 langchain_classic
@@ -8,3 +12,4 @@ langsmith
 langgraph
 google-search-results
 langchain_openai
+tavily-python

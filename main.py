@@ -1,3 +1,5 @@
+import logging
+
 from langchain.agents import create_agent
 import langchain
 from langgraph.checkpoint.memory import InMemorySaver
@@ -8,6 +10,8 @@ from prompts import COORDINATOR_AGENT_PROMPT
 
 
 checkpointer = InMemorySaver()
+
+MAX_RETRIES = 5
 
 print(f"LangChain version: {langchain.__version__}")
     
@@ -22,30 +26,54 @@ main_agent = create_agent(
 
 # ---- Run Multi-Agent Workflow ----
 
-THREAD_ID = "waleed-main-chat-1"
+def run_agent(query: str):
+    THREAD_ID = "anonymus-main-chat-1"
+    print("main function called")
 
-while True:
-    user_input = input("Enter Query: ")
+    i = 0
+    ERROR = ""
+    while i < MAX_RETRIES:
+        try:
+            if ERROR != "":
+                result = main_agent.invoke(
+                    {
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": query
+                            }
+                        ]
+                    },
+                    config={
+                        "configurable": {
+                            "thread_id": THREAD_ID
+                        }
+                    }
+                )
 
-    if user_input.lower() == "x":
-        break
-
-    result = main_agent.invoke(
-        {
-            "messages": [
+                return result["messages"][-1].content
+            
+            else:
+                result = main_agent.invoke(
                 {
-                    "role": "user",
-                    "content": user_input
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": query + ERROR + "Try a different approach."
+                        }
+                    ]
+                },
+                config={
+                    "configurable": {
+                        "thread_id": THREAD_ID
+                    }
                 }
-            ]
-        },
-        config={
-            "configurable": {
-                "thread_id": THREAD_ID
-            }
-        }
-    )
+            )
 
-    print("\nFinal Result:")
-    print(result["messages"][-1].content)
-    print()
+            return result["messages"][-1].content
+
+        except Exception as e:
+            i = i + 1
+            ERROR = f"Got error {e} while execution."
+            logging.warning(e)
+            return False

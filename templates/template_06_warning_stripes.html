@@ -1,8 +1,343 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<style>
-*{box-sizing:border-box} body{margin:0;background:#141414;font-family:Inter,Segoe UI,Arial,sans-serif}.post{width:1080px;height:1080px;background:#f6c437;position:relative;overflow:hidden}.stripes{position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(0,0,0,.18) 0 28px,transparent 28px 56px);opacity:.45}.paper{position:absolute;inset:70px;background:#111;border-radius:42px;color:#fff;padding:48px 54px;box-shadow:0 26px 0 rgba(0,0,0,.28);overflow:hidden}.bar{position:absolute;left:0;right:0;top:0;height:34px;background:repeating-linear-gradient(90deg,#f6c437 0 60px,#111 60px 120px)}.tag{margin-top:34px;display:inline-flex;align-items:center;gap:14px;color:#f6c437;font-size:28px;font-weight:1000;text-transform:uppercase;letter-spacing:.08em}.tag:before{content:"";width:34px;height:34px;background:#f6c437;clip-path:polygon(50% 0,100% 100%,0 100%)}.header{font-size:64px;line-height:.3;font-weight:1000;margin:42px 0 24px;text-transform:uppercase;letter-spacing:-.04em}.sub{font-size:32px;line-height:1.13;color:#e4e4e4;font-weight:650;max-width:800px}.items{margin-top:42px;display:grid;gap:16px}.item{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:18px;background:#202020;border-left:8px solid #f6c437;border-radius:16px;padding:18px 20px}.num{font-size:26px;color:#111;background:#f6c437;border-radius:14px;text-align:center;padding:12px 0;font-weight:1000}.txt{font-size:27px;line-height:1.12;font-weight:780}.cta{position:absolute;left:54px;right:54px;bottom:40px;background:#f6c437;color:#111;border-radius:18px;padding:24px 28px;font-size:32px;font-weight:1000;line-height:1.04}.link{position:absolute;right:54px;bottom:6px;color:#a3a3a3;font-size:18px;font-weight:800}.brand{position:absolute;left:54px;bottom:6px;color:#a3a3a3;font-size:20px;font-weight:900}</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Canvas | Industrial Yellow</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #141414;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        /* 
+            POST CONTAINER – dynamic height
+            - removed fixed height and overflow:hidden
+            - keeps yellow background and repeating diagonal stripes
+        */
+        .post {
+            width: 1080px;
+            max-width: 100%;
+            background: #f6c437;
+            position: relative;
+            padding: 70px;              /* creates margin around inner paper card */
+            /* no height, no overflow hidden – dynamic */
+        }
+
+        /* diagonal stripes overlay – preserved exactly */
+        .stripes {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(135deg, rgba(0,0,0,.18) 0 28px, transparent 28px 56px);
+            opacity: .45;
+            pointer-events: none;
+        }
+
+        /* 
+            PAPER CARD – dynamic height
+            - changed from absolute to relative (natural flow)
+            - removed fixed inset, now uses width:100% + border-radius
+            - added bottom padding to create space for absolute brand/link
+            - shadow and background preserved
+        */
+        .paper {
+            position: relative;          /* was absolute, now natural flow */
+            width: 100%;
+            background: #111;
+            border-radius: 42px;
+            color: #fff;
+            padding: 48px 54px 100px 54px;   /* increased bottom padding for brand/link */
+            box-shadow: 0 26px 0 rgba(0,0,0,.28);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* top decorative bar – unchanged */
+        .bar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 34px;
+            background: repeating-linear-gradient(90deg, #f6c437 0 60px, #111 60px 120px);
+            border-radius: 42px 42px 0 0;
+            pointer-events: none;
+        }
+
+        /* tag with diamond-like bullet – unchanged */
+        .tag {
+            margin-top: 34px;
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            color: #f6c437;
+            font-size: 28px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .tag:before {
+            content: "";
+            width: 34px;
+            height: 34px;
+            background: #f6c437;
+            clip-path: polygon(50% 0, 100% 100%, 0 100%);
+        }
+
+        /* headline */
+        .header {
+            font-size: 64px;
+            line-height: .3;
+            font-weight: 1000;
+            margin: 42px 0 24px;
+            text-transform: uppercase;
+            letter-spacing: -.04em;
+        }
+
+        /* subtext */
+        .sub {
+            font-size: 32px;
+            line-height: 1.13;
+            color: #e4e4e4;
+            font-weight: 650;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        /* checklist items – dynamic grid */
+        .items {
+            margin-top: 42px;
+            display: grid;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .item {
+            display: grid;
+            grid-template-columns: 62px 1fr;
+            align-items: center;
+            gap: 18px;
+            background: #202020;
+            border-left: 8px solid #f6c437;
+            border-radius: 16px;
+            padding: 18px 20px;
+        }
+
+        .num {
+            font-size: 26px;
+            color: #111;
+            background: #f6c437;
+            border-radius: 14px;
+            text-align: center;
+            padding: 12px 0;
+            font-weight: 1000;
+        }
+
+        .txt {
+            font-size: 27px;
+            line-height: 1.12;
+            font-weight: 780;
+        }
+
+        /* 
+            CTA – converted from absolute to normal flow
+            - sits after .items, uses margin-top for spacing
+            - retains all original styles (yellow background, bold, rounded corners)
+            - no longer causes empty bottom area
+        */
+        .cta {
+            background: #f6c437;
+            color: #111;
+            border-radius: 18px;
+            padding: 24px 28px;
+            font-size: 32px;
+            font-weight: 1000;
+            line-height: 1.04;
+            text-align: center;
+            margin-top: 48px;
+            transition: transform 0.1s ease;
+            width: 100%;
+        }
+
+        .cta:hover {
+            transform: scale(1.01);
+            cursor: pointer;
+        }
+
+        /* 
+            Brand & Link – absolute within .paper
+            Since .paper has padding-bottom: 100px, these elements sit comfortably
+            at the bottom without overlapping content.
+        */
+        .brand {
+            position: absolute;
+            left: 54px;
+            bottom: 28px;
+            color: #a3a3a3;
+            font-size: 20px;
+            font-weight: 900;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .link {
+            position: absolute;
+            right: 54px;
+            bottom: 28px;
+            color: #a3a3a3;
+            font-size: 18px;
+            font-weight: 800;
+            text-decoration: none;
+            pointer-events: auto;
+        }
+
+        /* responsive adjustments – maintain readability */
+        @media (max-width: 1100px) {
+            .post {
+                padding: 48px 32px;
+            }
+            .paper {
+                padding: 40px 40px 90px 40px;
+            }
+            .header {
+                font-size: 52px;
+                line-height: .35;
+            }
+            .sub {
+                font-size: 26px;
+            }
+            .item {
+                grid-template-columns: 54px 1fr;
+            }
+            .num {
+                font-size: 22px;
+                padding: 10px 0;
+            }
+            .txt {
+                font-size: 23px;
+            }
+            .cta {
+                font-size: 28px;
+                padding: 20px 24px;
+                margin-top: 40px;
+            }
+        }
+
+        @media (max-width: 780px) {
+            body {
+                padding: 24px 16px;
+            }
+            .post {
+                padding: 32px 20px;
+            }
+            .paper {
+                padding: 32px 28px 80px 28px;
+            }
+            .header {
+                font-size: 38px;
+                margin: 32px 0 20px;
+                line-height: .4;
+            }
+            .sub {
+                font-size: 22px;
+            }
+            .tag {
+                font-size: 22px;
+                margin-top: 24px;
+            }
+            .tag:before {
+                width: 26px;
+                height: 26px;
+            }
+            .items {
+                margin-top: 28px;
+                gap: 12px;
+            }
+            .item {
+                grid-template-columns: 48px 1fr;
+                gap: 12px;
+                padding: 14px 16px;
+            }
+            .num {
+                font-size: 20px;
+                padding: 8px 0;
+            }
+            .txt {
+                font-size: 18px;
+            }
+            .cta {
+                font-size: 22px;
+                padding: 16px 20px;
+                margin-top: 32px;
+            }
+            .brand {
+                left: 28px;
+                bottom: 22px;
+                font-size: 15px;
+            }
+            .link {
+                right: 28px;
+                bottom: 22px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
-<body><main id="post" class="post"><div class="stripes"></div><section class="paper"><div class="bar"></div><div class="tag">{{ sub_header }}</div><h1 class="header">{{ header }}</h1><p class="sub">{{ content_items[0] if content_items else content }}</p><div class="items">{% for item in content_items[1:5] %}<div class="item"><div class="num">{{ loop.index }}</div><div class="txt">{{ item }}</div></div>{% endfor %}</div><div class="cta">{{ cta }}</div><div class="brand">{{ brand }}</div>{% if link_label %}<div class="link">{{ link_label }}</div>{% endif %}</section></main></body></html>
+<body>
+    <main id="post" class="post">
+        <!-- diagonal stripe overlay -->
+        <div class="stripes"></div>
+
+        <!-- inner dark paper card – height adjusts dynamically -->
+        <section class="paper">
+            <!-- top colored bar -->
+            <div class="bar"></div>
+
+            <!-- tag / kicker -->
+            <div class="tag">{{ sub_header }}</div>
+
+            <!-- main headline -->
+            <h1 class="header">{{ header }}</h1>
+
+            <!-- sub description -->
+            <p class="sub">{{ content_items[0] if content_items else content }}</p>
+
+            <!-- dynamic checklist items (up to 4 from content_items[1:5]) -->
+            <div class="items">
+                {% for item in content_items[1:5] %}
+                <div class="item">
+                    <div class="num">{{ loop.index }}</div>
+                    <div class="txt">{{ item }}</div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 
+                CTA is now in natural document flow – no absolute positioning.
+                It automatically sits below the checklist, and the card height 
+                expands accordingly. All visual styles are preserved.
+            -->
+            <div class="cta">{{ cta }}</div>
+
+            <!-- absolute brand mark (bottom left) -->
+            <div class="brand">{{ brand }}</div>
+
+            <!-- optional link label (bottom right) -->
+            {% if link_label %}
+            <div class="link">{{ link_label }}</div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
